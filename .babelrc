@@ -1,0 +1,15 @@
+{
+	"presets": [
+		["env", { "targets": { "browsers": ["last 2 versions"] } }],
+		"stage-2",
+		"react"
+	],
+	"plugins": [
+		"react-hot-loader/babel",
+		"transform-decorators-legacy",
+		"transform-react-jsx-self",
+		"transform-react-jsx-source",
+		"styled-components",
+		"syntax-dynamic-import"
+	]
+}

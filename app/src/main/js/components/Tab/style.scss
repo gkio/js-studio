@@ -1,0 +1,32 @@
+$color : #449ed0;
+
+.pt-tab-list{
+  border-bottom: 1px solid $color;
+}
+
+.pt-tab {
+  padding: 5px 10px;
+}
+.pt-dark .pt-tab{
+  background-color: #274250;
+  color: #ccc;
+}
+
+.pt-tab-list > *:not(:last-child) {
+  margin-right: 5px;
+}
+
+.pt-dark .pt-tab[aria-selected="true"],
+.pt-dark .pt-tab:not([aria-disabled="true"]):hover {
+  color: #fff;
+  background-color: $color;
+}
+
+.pt-dark .pt-tab[aria-selected="true"] {
+  box-shadow: none;
+}
+
+.icon-cross {
+  margin-top: 7px;
+  margin-left: 15px;
+}
