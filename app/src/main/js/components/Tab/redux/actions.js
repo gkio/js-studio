@@ -14,6 +14,26 @@ export function setActiveTab(currentTab) {
   };
 }
 
+export function addTab(tabLabel) {
+  return (dispatch, getState) => {
+    const { tabs } = getState()[REDUCER_NAME];
+    dispatch({
+      type: ADD_TAB,
+      payload: {
+        tabs: [
+          ...tabs,
+          {
+            label: tabLabel,
+            newFile: false
+          }
+        ]
+      }
+    });
+
+    dispatch(setActiveTab(tabs.length + 1));
+  };
+}
+
 export function removeTab(tabId) {
   return (dispatch, getState) => {
     const { tabs } = getState()[REDUCER_NAME];

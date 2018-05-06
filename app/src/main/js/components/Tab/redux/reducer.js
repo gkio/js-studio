@@ -17,8 +17,8 @@ const INITIAL_STATE = {
 export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case ADD_TAB: {
-      const { newTab } = action.payload;
-      return { ...state, tabs: [...tabs, newTab] };
+      const { tabs } = action.payload;
+      return { ...state, tabs };
     }
 
     case SET_ACTIVE_TAB: {

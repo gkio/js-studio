@@ -2,27 +2,21 @@ import React, { Component } from "react";
 import { string, func } from "prop-types";
 import { connect } from "react-redux";
 import Header from "./components/header";
-import Modal from "./components/Modal";
+import NewProject from "./components/NewProject";
 import Tab from "./components/Tab";
 import Toolbar from "./components/Toolbar";
-import { setAppName } from "./redux/actions";
 import { REDUCER_NAME as GLOBAL_REDUCER_NAME } from "./redux/actionTypes";
 import reducer from "./redux/reducer";
+
 import { injectAsyncReducer } from "./redux/store";
 
 injectAsyncReducer(GLOBAL_REDUCER_NAME, reducer);
 
-@connect(
-  state => ({
-    appName: state[GLOBAL_REDUCER_NAME].appName
-  }),
-  {
-    _setAppName: setAppName
-  }
-)
+@connect(state => ({
+  appName: state[GLOBAL_REDUCER_NAME].appName
+}))
 class App extends Component {
   static props = {
-    _setAppName: func,
     appName: string
   };
 
@@ -32,7 +26,7 @@ class App extends Component {
     return (
       <div className="pt-dark">
         <Header appName={appName} />
-        <Modal setAppName={_setAppName} visible={!appName} />
+        <NewProject appName={appName} />
         <Toolbar />
         {appName && <Tab />}
       </div>

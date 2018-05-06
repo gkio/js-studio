@@ -3,13 +3,14 @@ import { Icon, Intent } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import brace from "brace";
 import { connect } from "react-redux";
+import Modal from "../Modal";
 import AceEditor from "react-ace";
 import { array, func } from "prop-types";
 
 import reducer from "./redux/reducer";
 import { REDUCER_NAME as TABS_REDUCER_NAME } from "./redux/actionTypes";
 import { injectAsyncReducer } from "../../redux/store";
-import { setActiveTab, removeTab } from "./redux/actions";
+import { setActiveTab, removeTab, addTab } from "./redux/actions";
 injectAsyncReducer(TABS_REDUCER_NAME, reducer);
 
 import "brace/mode/javascript";
@@ -23,6 +24,7 @@ import "./style.scss";
   }),
   {
     _setActiveTab: setActiveTab,
+    _addTab: addTab,
     _removeTab: removeTab
   }
 )
@@ -30,13 +32,23 @@ class Tab extends Component {
   static props = {
     tabs: array,
     _setActiveTab: func,
-    _removeTab: func
+    _removeTab: func,
+    _addTab: func
   };
 
-  state = {};
+  state = {
+    fileName: "",
+    showModal: false
+  };
 
   codeEditorChanges = value => {
     console.log(value);
+  };
+
+  inputOnChange = ({ target: { value } }) => {
+    if (value) {
+      this.setState({ fileName: value });
+    }
   };
 
   removeTab = (e, tabId) => {
@@ -46,6 +58,24 @@ class Tab extends Component {
     _removeTab(tabId);
   };
 
+  triggerModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
+
+  newTab = () => {
+    this.triggerModal();
+  };
+
+  addNewTab = () => {
+    const { _addTab } = this.props;
+    const { fileName } = this.state;
+
+    if (fileName) {
+      this.triggerModal();
+      _addTab(fileName);
+    }
+  };
+
   changeCurrentTab = currentTab => {
     const { _setActiveTab } = this.props;
     console.log(currentTab);
@@ -53,6 +83,7 @@ class Tab extends Component {
   };
 
   render() {
+    const { showModal } = this.state;
     const { tabs, currentTab } = this.props;
     return (
       <div className="pt-tabs">
@@ -86,12 +117,25 @@ class Tab extends Component {
               style={{ marginTop: "7px", color: "#fff" }}
               icon={IconNames.PLUS}
               iconSize={Icon.SIZE_STANDARD}
+              onClick={this.newTab}
             />
           </li>
         </ul>
-        <div className="pt-tab-panel" role="tabpanel" aria-hidden="true">
-          Selected panel
-        </div>
+        {showModal && (
+          <Modal
+            onSubmit={this.addNewTab}
+            onClose={this.triggerModal}
+            title="New File"
+            visible={showModal}
+          >
+            <input
+              style={{ width: `100%` }}
+              className="pt-input"
+              placeholder="Set File Name"
+              onChange={this.inputOnChange}
+            />
+          </Modal>
+        )}
         <div className="pt-tab-panel" role="tabpanel" aria-selected="true">
           <AceEditor
             mode="javascript"
@@ -103,9 +147,6 @@ class Tab extends Component {
             name="UNIQUE_ID_OF_DIV"
             editorProps={{ $blockScrolling: true }}
           />
-        </div>
-        <div className="pt-tab-panel" role="tabpanel" aria-hidden="true">
-          Disabled panel
         </div>
       </div>
     );
